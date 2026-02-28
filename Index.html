@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leviathan Bot</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f0f14;
+    color:white;
+    overflow-x:hidden;
+}
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 10%;
+    position:fixed;
+    width:100%;
+    background:rgba(0,0,0,0.4);
+    backdrop-filter:blur(10px);
+    z-index:1000;
+}
+
+nav h2{
+    color:#5865F2;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:20px;
+    font-weight:500;
+}
+
+.hero{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    background:linear-gradient(135deg,#5865F2,#2c2f33);
+}
+
+.hero h1{
+    font-size:60px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    font-size:18px;
+    margin-bottom:30px;
+    opacity:0.8;
+}
+
+.btn{
+    padding:12px 35px;
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    font-weight:600;
+    transition:0.3s;
+    margin:5px;
+}
+
+.primary{
+    background:white;
+    color:#5865F2;
+}
+
+.primary:hover{
+    transform:scale(1.1);
+}
+
+.section{
+    padding:100px 10%;
+    text-align:center;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.card{
+    background:#1a1a22;
+    padding:40px;
+    border-radius:20px;
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-10px);
+}
+
+.pricing{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.price-card{
+    background:#1a1a22;
+    padding:40px;
+    border-radius:20px;
+    transition:0.3s;
+}
+
+.price-card:hover{
+    transform:scale(1.05);
+}
+
+.price{
+    font-size:40px;
+    margin:20px 0;
+    color:#5865F2;
+}
+
+.faq{
+    text-align:left;
+    max-width:800px;
+    margin:50px auto 0;
+}
+
+.faq-item{
+    margin-bottom:20px;
+    background:#1a1a22;
+    padding:20px;
+    border-radius:10px;
+}
+
+footer{
+    padding:40px;
+    text-align:center;
+    background:#111;
+    margin-top:80px;
+    opacity:0.7;
+}
+
+@media(max-width:768px){
+.hero h1{
+    font-size:40px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h2>Leviathan Bot</h2>
+<div>
+<a href="#features">Tính năng</a>
+<a href="#pricing">Premium</a>
+<a href="#faq">FAQ</a>
+</div>
+</nav>
+
+<section class="hero">
+<h1>Leviathan Discord Bot</h1>
+<p>Moderation • Economy • Premium • Automation</p>
+<div>
+<button class="btn primary">Invite Bot</button>
+<button class="btn primary">Support Server</button>
+</div>
+</section>
+
+<section class="section" id="features">
+<h2>Tính Năng</h2>
+<div class="features">
+<div class="card">
+<h3>🎮 Giải Trí</h3>
+<p>Mini game, rank, hệ thống level, reaction role.</p>
+</div>
+<div class="card">
+<h3>💰 Kinh Tế</h3>
+<p>Bank, shop, item, premium multiplier.</p>
+</div>
+<div class="card">
+<h3>🛡 Moderation</h3>
+<p>Kick, ban, timeout, anti raid, anti spam.</p>
+</div>
+<div class="card">
+<h3>👑 Premium</h3>
+<p>Tính năng nâng cao, tốc độ cao, đặc quyền riêng.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="pricing">
+<h2>Gói Premium</h2>
+<div class="pricing">
+<div class="price-card">
+<h3>Free</h3>
+<div class="price">0đ</div>
+<p>Tính năng cơ bản</p>
+</div>
+
+<div class="price-card">
+<h3>VIP</h3>
+<div class="price">49k</div>
+<p>Boost economy + role đặc biệt</p>
+</div>
+
+<div class="price-card">
+<h3>Super VIP</h3>
+<div class="price">99k</div>
+<p>Tất cả tính năng + ưu tiên support</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="faq">
+<h2>FAQ</h2>
+<div class="faq">
+<div class="faq-item">
+<h4>Bot có miễn phí không?</h4>
+<p>Có, bạn có thể sử dụng bản Free.</p>
+</div>
+
+<div class="faq-item">
+<h4>Làm sao kích hoạt Premium?</h4>
+<p>Dùng lệnh !kickhoat với code bạn nhận được.</p>
+</div>
+
+<div class="faq-item">
+<h4>Bot có anti raid không?</h4>
+<p>Có, hệ thống bảo mật mạnh.</p>
+</div>
+</div>
+</section>
+
+<footer>
+© 2026 Leviathan Bot - All rights reserved
+</footer>
+
+</body>
+  </html>
