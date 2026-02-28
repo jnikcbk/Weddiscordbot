@@ -396,33 +396,30 @@ warpEffect();
 
 </script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDW_LJM_-AJXuoD7J0tPmPpZu33wdMGVlA",
   authDomain: "meobot-e4cbd.firebaseapp.com",
   databaseURL: "https://meobot-e4cbd-default-rtdb.firebaseio.com",
-  projectId: "meobot-e4cbd",
-  storageBucket: "meobot-e4cbd.firebasestorage.app",
-  messagingSenderId: "1023380798414",
-  appId: "1:1023380798414:web:7118414b8f8a072de7899f"
+  projectId: "meobot-e4cbd"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 const userId = localStorage.getItem("supportId") || Date.now().toString();
 localStorage.setItem("supportId", userId);
 
-const chatRef = ref(db, "support/" + userId);
+const chatRef = db.ref("support/" + userId);
 
-window.sendSupport = function(){
+function sendSupport(){
   const input = document.getElementById("supportInput");
   if(!input.value.trim()) return;
 
-  push(chatRef,{
+  chatRef.push({
     sender:"user",
     message:input.value,
     time:Date.now()
@@ -431,7 +428,7 @@ window.sendSupport = function(){
   input.value="";
 }
 
-onChildAdded(chatRef,(snapshot)=>{
+chatRef.on("child_added", snapshot=>{
   const data = snapshot.val();
   const box = document.getElementById("supportMessages");
 
@@ -452,18 +449,6 @@ onChildAdded(chatRef,(snapshot)=>{
   box.appendChild(div);
   box.scrollTop=box.scrollHeight;
 });
-  </script>
-  <script>
-const nav = document.querySelector("nav");
-addEventListener("scroll",()=>{
-  if(scrollY>50){
-    nav.style.background="rgba(10,10,20,0.9)";
-    nav.style.boxShadow="0 0 20px #5865F2";
-  }else{
-    nav.style.background="rgba(20,20,30,0.6)";
-    nav.style.boxShadow="none";
-  }
-});
-  </script>
+</script>
 </body>
 </html>
