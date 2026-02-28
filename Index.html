@@ -22,7 +22,9 @@ width:100%;
 height:100%;
 z-index:-2;
 }
-
+#homePage, #supportPage{
+transition: all 0.4s ease;
+}
 /* Blur Overlay */
 .overlay{
 position:fixed;
@@ -177,7 +179,7 @@ background:rgba(0,0,0,0.6);
 <div class="overlay"></div>
 
 <nav>
-<h2>LEVIATHAN</h2>
+<h2>MEO bot</h2>
 <div>
 <a href="#" onclick="showHome()">Home</a>
 <a href="#features">Features</a>
@@ -235,51 +237,233 @@ Invite Bot</a>
 <footer>© 2026 Leviathan Bot</footer>
 
 <script>
+const homePage = document.getElementById("homePage");
+const supportPage = document.getElementById("supportPage");
+
+function smoothTransition(hideEl, showEl){
+  hideEl.style.opacity = "0";
+  hideEl.style.transform = "translateY(20px)";
+
+  setTimeout(()=>{
+    hideEl.style.display = "none";
+    showEl.style.display = "block";
+
+    showEl.style.opacity = "0";
+    showEl.style.transform = "translateY(20px)";
+
+    setTimeout(()=>{
+      showEl.style.transition = "all 0.4s ease";
+      showEl.style.opacity = "1";
+      showEl.style.transform = "translateY(0)";
+    },50);
+
+  },300);
+}
+
 function showSupport(){
-document.getElementById("homePage").style.display="none";
-document.getElementById("supportPage").style.display="block";
-window.scrollTo(0,0);
+  smoothTransition(homePage, supportPage);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function showHome(){
-document.getElementById("homePage").style.display="block";
-document.getElementById("supportPage").style.display="none";
+  smoothTransition(supportPage, homePage);
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 </script>
-
 <script>
-const canvas=document.getElementById("galaxy");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+const canvas = document.getElementById("galaxy");
+const ctx = canvas.getContext("2d");
 
-let stars=[];
-for(let i=0;i<250;i++){
-stars.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*2,
-s:Math.random()*0.5
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+let mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+document.addEventListener("mousemove", e=>{
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
 });
+
+const STAR_COUNT = 500;
+let stars = [];
+
+for(let i=0;i<STAR_COUNT;i++){
+  stars.push({
+    x: Math.random()*canvas.width - canvas.width/2,
+    y: Math.random()*canvas.height - canvas.height/2,
+    z: Math.random()*canvas.width,
+    size: Math.random()*2
+  });
+}
+
+function drawNebula(){
+  const gradient = ctx.createRadialGradient(
+    mouse.x, mouse.y, 0,
+    mouse.x, mouse.y, canvas.width/2
+  );
+  gradient.addColorStop(0,"rgba(88,101,242,0.15)");
+  gradient.addColorStop(0.5,"rgba(147,112,219,0.08)");
+  gradient.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 
 function animate(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle="white";
-stars.forEach(star=>{
-ctx.beginPath();
-ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-ctx.fill();
-star.y+=star.s;
-if(star.y>canvas.height){
-star.y=0;
-star.x=Math.random()*canvas.width;
-}
-});
-requestAnimationFrame(animate);
+  ctx.fillStyle = "rgba(0,0,15,0.4)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  drawNebula();
+
+  stars.forEach(star=>{
+    star.z -= 2;
+
+    if(star.z <= 0){
+      star.x = Math.random()*canvas.width - canvas.width/2;
+      star.y = Math.random()*canvas.height - canvas.height/2;
+      star.z = canvas.width;
+    }
+
+    const k = 128.0 / star.z;
+    const px = star.x * k + canvas.width/2;
+    const py = star.y * k + canvas.height/2;
+
+    if(px >= 0 && px <= canvas.width && py >= 0 && py <= canvas.height){
+      const size = (1 - star.z/canvas.width)*3;
+      ctx.beginPath();
+      ctx.arc(px, py, size, 0, Math.PI*2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+    }
+  });
+
+  requestAnimationFrame(animate);
 }
 animate();
+
+
+// 🌠 SHOOTING STAR
+function shootingStar(){
+  let x = Math.random()*canvas.width;
+  let y = Math.random()*canvas.height/2;
+  let len = Math.random()*150 + 50;
+  let angle = Math.PI/4;
+
+  let speed = 10;
+  let progress = 0;
+
+  function draw(){
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(
+      x + progress*Math.cos(angle),
+      y + progress*Math.sin(angle)
+    );
+    ctx.strokeStyle="white";
+    ctx.lineWidth=2;
+    ctx.stroke();
+
+    progress += speed;
+
+    if(progress < len){
+      requestAnimationFrame(draw);
+    }
+  }
+  draw();
+}
+
+setInterval(shootingStar, 4000);
+
+
+// 🚀 WARP SPEED EFFECT
+let warp = false;
+document.addEventListener("click", ()=>{
+  warp = true;
+  setTimeout(()=>warp=false, 800);
+});
+
+function warpEffect(){
+  if(warp){
+    stars.forEach(star=>{
+      star.z -= 20;
+    });
+  }
+  requestAnimationFrame(warpEffect);
+}
+warpEffect();
+
 </script>
 
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDW_LJM_-AJXuoD7J0tPmPpZu33wdMGVlA",
+  authDomain: "meobot-e4cbd.firebaseapp.com",
+  databaseURL: "https://meobot-e4cbd-default-rtdb.firebaseio.com",
+  projectId: "meobot-e4cbd",
+  storageBucket: "meobot-e4cbd.firebasestorage.app",
+  messagingSenderId: "1023380798414",
+  appId: "1:1023380798414:web:7118414b8f8a072de7899f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const userId = localStorage.getItem("supportId") || Date.now().toString();
+localStorage.setItem("supportId", userId);
+
+const chatRef = ref(db, "support/" + userId);
+
+window.sendSupport = function(){
+  const input = document.getElementById("supportInput");
+  if(!input.value.trim()) return;
+
+  push(chatRef,{
+    sender:"user",
+    message:input.value,
+    time:Date.now()
+  });
+
+  input.value="";
+}
+
+onChildAdded(chatRef,(snapshot)=>{
+  const data = snapshot.val();
+  const box = document.getElementById("supportMessages");
+
+  const div = document.createElement("div");
+  div.style.padding="6px 10px";
+  div.style.margin="4px 0";
+  div.style.borderRadius="8px";
+  div.style.maxWidth="70%";
+
+  if(data.sender==="user"){
+    div.style.background="#5865F2";
+    div.style.marginLeft="auto";
+  } else {
+    div.style.background="#333";
+  }
+
+  div.innerText=data.message;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+});
+  </script>
+  <script>
+const nav = document.querySelector("nav");
+addEventListener("scroll",()=>{
+  if(scrollY>50){
+    nav.style.background="rgba(10,10,20,0.9)";
+    nav.style.boxShadow="0 0 20px #5865F2";
+  }else{
+    nav.style.background="rgba(20,20,30,0.6)";
+    nav.style.boxShadow="none";
+  }
+});
+  </script>
 </body>
 </html>
