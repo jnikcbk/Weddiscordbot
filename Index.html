@@ -174,7 +174,9 @@ footer{
 <h1>Leviathan Discord Bot</h1>
 <p>Moderation • Economy • Premium • Automation</p>
 <div>
-<button class="btn primary">Invite Bot</button>
+<a href="https://discord.com/oauth2/authorize?client_id=1471048517706449099&permissions=8&scope=bot%20applications.commands&redirect_uri=https%3A%2F%2Ftenwebcuaban.com&response_type=code" class="btn primary">
+Invite Bot
+</a>
 <button class="btn primary">Support Server</button>
 </div>
 </section>
@@ -247,6 +249,116 @@ footer{
 <footer>
 © 2026 Leviathan Bot - All rights reserved
 </footer>
+<script>
+const params = new URLSearchParams(window.location.search);
 
+if(params.get("code")){
+    document.body.innerHTML += `
+    <div id="successBox" style="
+        position:fixed;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        background:#1a1a22;
+        padding:40px;
+        border-radius:20px;
+        text-align:center;
+        box-shadow:0 0 40px #5865F2;
+        z-index:9999;
+    ">
+        <h2 style="color:#5865F2;">🎉 Mời Bot Thành Công!</h2>
+        <p>Bot đã được thêm vào server của bạn.</p>
+        <button onclick="closeBox()" style="
+            padding:10px 25px;
+            margin-top:20px;
+            background:#5865F2;
+            border:none;
+            border-radius:30px;
+            color:white;
+            cursor:pointer;
+        ">OK</button>
+    </div>
+    `;
+
+    function closeBox(){
+        document.getElementById("successBox").remove();
+        window.history.replaceState({}, document.title, "/");
+    }
+}
+        </script>
+    <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDW_LJM_-AJXuoD7J0tPmPpZu33wdMGVlA",
+  authDomain: "meobot-e4cbd.firebaseapp.com",
+  databaseURL: "https://meobot-e4cbd-default-rtdb.firebaseio.com",
+  projectId: "meobot-e4cbd",
+  storageBucket: "meobot-e4cbd.firebasestorage.app",
+  messagingSenderId: "1023380798414",
+  appId: "1:1023380798414:web:7118414b8f8a072de7899f"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const userId = localStorage.getItem("supportId") || Date.now().toString();
+localStorage.setItem("supportId", userId);
+
+const chatRef = ref(db, "support/" + userId);
+
+window.sendSupport = function(){
+  const input = document.getElementById("supportInput");
+  if(!input.value.trim()) return;
+
+  push(chatRef,{
+    sender:"user",
+    message:input.value,
+    time:Date.now()
+  });
+
+  input.value="";
+}
+
+onChildAdded(chatRef,(snapshot)=>{
+  const data = snapshot.val();
+  const box = document.getElementById("supportMessages");
+
+  const div = document.createElement("div");
+  div.style.padding="6px 10px";
+  div.style.margin="4px 0";
+  div.style.borderRadius="8px";
+  div.style.maxWidth="70%";
+
+  if(data.sender==="user"){
+    div.style.background="#5865F2";
+    div.style.marginLeft="auto";
+  } else {
+    div.style.background="#333";
+  }
+
+  div.innerText=data.message;
+  box.appendChild(div);
+  box.scrollTop=box.scrollHeight;
+});
+    </script>
+    <div style="width:350px;margin:20px auto;background:#1e1e1e;padding:15px;border-radius:12px;color:white;font-family:sans-serif;">
+  <h3 style="text-align:center;margin-bottom:10px;">Support Chat</h3>
+
+  <div id="supportMessages"
+       style="height:300px;overflow-y:auto;background:#111;padding:10px;border-radius:8px;margin-bottom:10px;">
+  </div>
+
+  <div style="display:flex;gap:5px;">
+    <input id="supportInput"
+           placeholder="Nhập tin nhắn..."
+           style="flex:1;padding:8px;border-radius:6px;border:none;outline:none;">
+    <button onclick="sendSupport()"
+            style="padding:8px 12px;border:none;border-radius:6px;background:#5865F2;color:white;cursor:pointer;">
+      Gửi
+    </button>
+  </div>
+    </div>
 </body>
   </html>
