@@ -2,173 +2,231 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NRM Premium Dashboard</title>
+    <title>MY_CREATIVE_SPACE</title>
     <style>
         :root {
-            --primary: #5865F2;
-            --bg: #0f0f13;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text: #ffffff;
+            --bg: #f0f2f5;
+            --accent: #ff4757;
+            --card: #ffffff;
+            --shadow: 8px 8px 0px #000;
         }
 
-        body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top right, #2c2f33, #0f0f13);
-            color: var(--text);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 50px 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #5865F2, #00d2ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        p { color: #b9bbbe; margin-bottom: 40px; }
-
-        .container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
-            max-width: 1100px;
-        }
-
-        /* Bot Card */
-        .card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 25px;
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            background-color: var(--bg);
+            font-family: 'Inter', system-ui, sans-serif;
             overflow: hidden;
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.2);
+        /* Đồng hồ khổng lồ */
+        #clock-container {
+            position: absolute;
+            top: 10%; left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            pointer-events: none;
         }
 
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            background: #43b581;
+        #clock {
+            font-size: 120px;
+            font-weight: 900;
+            color: #000;
+            letter-spacing: -5px;
+            margin: 0;
+        }
+
+        /* Ghi chú kéo thả */
+        .note {
+            position: absolute;
+            width: 200px;
+            padding: 20px;
+            background: #fff;
+            border: 3px solid #000;
+            box-shadow: var(--shadow);
+            cursor: move;
+            transition: transform 0.1s;
+        }
+
+        .note:active { transform: scale(1.05) rotate(2deg); }
+
+        .note h3 { margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; border-bottom: 2px solid #000; }
+        .note p { font-size: 13px; line-height: 1.4; margin: 0; color: #333; }
+
+        /* Widget âm thanh */
+        #audio-widget {
+            position: fixed;
+            bottom: 30px; right: 30px;
+            background: #fff;
+            border: 3px solid #000;
+            padding: 15px 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-btn {
+            width: 40px; height: 40px;
             border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-        }
-
-        .bot-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #2f3136;
-            margin: 0 auto 15px;
+            background: var(--accent);
+            border: 2px solid #000;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 20px;
         }
 
-        .bot-name { font-size: 1.4rem; font-weight: bold; margin-bottom: 20px; display: block; }
-
-        /* Nút bấm */
-        .btn-group {
+        /* Thanh menu dưới */
+        #dock {
+            position: fixed;
+            bottom: 30px; left: 50%;
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 15px;
         }
 
-        button {
+        .dock-item {
             padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
+            background: #000;
+            color: #fff;
+            font-weight: bold;
+            font-size: 12px;
             cursor: pointer;
-            font-weight: 600;
+            border: none;
             transition: 0.2s;
         }
 
-        .btn-main { background: var(--primary); color: white; }
-        .btn-main:hover { background: #4752c4; }
+        .dock-item:hover { transform: translateY(-5px); background: var(--accent); }
 
-        .btn-sub { background: rgba(255, 255, 255, 0.1); color: white; font-size: 0.9rem; }
-        .btn-sub:hover { background: rgba(255, 255, 255, 0.2); }
-
-        /* Ô Thêm Bot */
-        .add-card {
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            background: transparent;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            min-height: 250px;
-        }
-
-        .add-card:hover {
-            border-color: #5865f2;
-            background: rgba(88, 101, 242, 0.05);
-        }
-
-        .add-icon {
-            font-size: 50px;
-            color: rgba(255, 255, 255, 0.3);
-            margin-bottom: 10px;
-        }
-
-        a { text-decoration: none; color: inherit; }
     </style>
 </head>
 <body>
 
-    <h1>NRM BOT PANEL</h1>
-    <p>Quản lý hệ thống Bot Discord của bạn</p>
-
-    <div class="container">
-        <div class="card">
-            <div class="bot-img">🤖</div>
-            <span class="bot-name"><span class="status-dot"></span> NRM Bot Music</span>
-            <div class="btn-group">
-                <a href="https://discord.com/oauth2/authorize?client_id=1477295832335384598&scope=identify%20guilds&response_type=code&redirect_uri=https%3A%2F%2Fweddiscordbot.vercel.app%2Fapi%2Fauth%2Fcallback">
-                    <button class="btn-main" style="width: 100%;">Quản lý ngay</button>
-                </a>
-                <button class="btn-sub">Cài đặt lệnh</button>
-                <button class="btn-sub">Xem thống kê</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="bot-img">🛡️</div>
-            <span class="bot-name"><span class="status-dot"></span> NRM Security</span>
-            <div class="btn-group">
-                <a href="https://discord.com/oauth2/authorize?client_id=ID_BOT_2_CUA_BAN&scope=identify%20guilds&response_type=code&redirect_uri=https%3A%2F%2Fweddiscordbot.vercel.app%2Fapi%2Fauth%2Fcallback">
-                    <button class="btn-main" style="width: 100%;">Quản lý ngay</button>
-                </a>
-                <button class="btn-sub">Cấu hình bảo mật</button>
-                <button class="btn-sub">Nhật ký Bot</button>
-            </div>
-        </div>
-
-        <a href="https://discord.com/developers/applications" target="_blank" style="display: contents;">
-            <div class="card add-card">
-                <div class="add-icon">+</div>
-                <span style="color: rgba(255, 255, 255, 0.5);">Thêm Bot Mới</span>
-            </div>
-        </a>
+    <div id="clock-container">
+        <div id="clock">00:00</div>
+        <div style="font-weight: bold; letter-spacing: 5px;">THỨ HAI, 16 THÁNG 3</div>
     </div>
 
+    <div class="note" style="top: 300px; left: 100px; background: #fff740;">
+        <h3>Ý tưởng mới</h3>
+        <p>Làm một dự án web không giống ai vào tuần sau. Phải thật cháy!</p>
+    </div>
+
+    <div class="note" style="top: 150px; right: 150px; background: #7afaff;">
+        <h3>Reminder</h3>
+        <p>Uống nước đầy đủ và nghỉ ngơi sau mỗi 45 phút code.</p>
+    </div>
+
+    <div id="audio-widget">
+        <div class="play-btn" id="play-btn">▶</div>
+        <div>
+            <div style="font-weight: bold; font-size: 12px;">LO-FI FOCUS</div>
+            <div style="font-size: 10px; opacity: 0.6;">SÓNG BIỂN RÌ RÀO</div>
+        </div>
+    </div>
+
+    <div id="dock">
+        <button class="dock-item" onclick="createNote()">+ THÊM GHI CHÚ</button>
+        <button class="dock-item" id="bg-toggle">ĐỔI MÀU NỀN</button>
+    </div>
+
+    <script>
+        // 1. Đồng hồ thời gian thực
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${h}:${m}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. Logic kéo thả ghi chú
+        function makeDraggable(el) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            el.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+                el.style.zIndex = 1000;
+            }
+
+            function elementDrag(e) {
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                el.style.top = (el.offsetTop - pos2) + "px";
+                el.style.left = (el.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                document.onmouseup = null;
+                document.onmousemove = null;
+                el.style.zIndex = 1;
+            }
+        }
+
+        document.querySelectorAll('.note').forEach(makeDraggable);
+
+        // 3. Tạo ghi chú mới
+        function createNote() {
+            const colors = ['#fff740', '#7afaff', '#ff7eb9', '#ff9ee9'];
+            const newNote = document.createElement('div');
+            newNote.className = 'note';
+            newNote.style.top = '100px';
+            newNote.style.left = '100px';
+            newNote.style.background = colors[Math.floor(Math.random() * colors.length)];
+            newNote.innerHTML = `<h3>Ghi chú mới</h3><p contenteditable="true">Click để viết nội dung vào đây...</p>`;
+            document.body.appendChild(newNote);
+            makeDraggable(newNote);
+        }
+
+        // 4. Giả lập âm thanh (White Noise)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let isPlaying = false;
+        let noiseNode;
+
+        document.getElementById('play-btn').onclick = function() {
+            if (!isPlaying) {
+                const bufferSize = 2 * audioCtx.sampleRate,
+                buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate),
+                output = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = buffer;
+                noiseNode.loop = true;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 400; // Tiếng trầm giống tiếng sóng/mưa
+                noiseNode.connect(filter);
+                filter.connect(audioCtx.destination);
+                noiseNode.start();
+                this.innerText = '■';
+                isPlaying = true;
+            } else {
+                noiseNode.stop();
+                this.innerText = '▶';
+                isPlaying = false;
+            }
+        };
+
+        // 5. Đổi màu nền ngẫu nhiên
+        document.getElementById('bg-toggle').onclick = () => {
+            const colors = ['#f0f2f5', '#e3f2fd', '#fce4ec', '#f1f8e9', '#fff3e0'];
+            document.body.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+        };
+
+    </script>
 </body>
 </html>
